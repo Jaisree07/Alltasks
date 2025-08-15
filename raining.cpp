@@ -6,7 +6,7 @@ void findumbrella(){
     bool searchumbrella;
     int count=0;
     int randomval=10;
-    cout << "Do you wnat to search umbrella" << endl;
+    cout << "Do you want to search umbrella" << endl;
     if(searchumbrella){
         cout << "Found Umbrella" << endl;
         cout << "Bring Umbrella" << endl;
