@@ -61,14 +61,14 @@ void Buyticket(){
         cout << "Select the seat" << endl;
     }
     else{
-        cout << "Do you want reservation" << endl;
+        cout << "Do you want reservation?(y/n)" << endl;
         cin >> isreserve;
         if(tolower(isreserve)=='y')
         {
              cout << "Select the seat" << endl;
         }
         else{
-           cout << "No reservation available"
+           cout << "No reservation available";
            exit(0);
         }
     }
