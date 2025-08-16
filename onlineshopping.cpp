@@ -10,11 +10,17 @@ void goods(){
     if(tolower(goodscollected)=='y'){
     cout << "Send warehouse goods to customer" << endl;
     cout << "Collect the goods" << endl;
+    exit(0);
+    }
+    else{
+        cout << "Seller will confirm the order receieved" << endl;
+        exit(0);
     }
     
 }
   
 void warehouse(){
+    
     cout << "Is the goods in warehouse?(y/n)" << endl;
     char ispresent;
     cin >> ispresent;
@@ -38,8 +44,9 @@ void warehouse(){
 int main(){
     char isplaced;
     cout << "Is Order placed?(y/n)" << endl;
-    cin << isplaced;
+    cin >> isplaced;
     if(tolower(isplaced)=='y'){
+        while(true){
         char isitem;
         cout << "Check if item is peresent?(y/n)" << endl;
         cin >> isitem;
@@ -48,6 +55,8 @@ int main(){
         }
         else{
             warehouse();
+        
         }
+    }
     }
 }
