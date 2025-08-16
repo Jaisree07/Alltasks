@@ -48,15 +48,19 @@ int main(){
     if(tolower(isplaced)=='y'){
         while(true){
         char isitem;
-        cout << "Check if item is peresent?(y/n)" << endl;
+        cout << "Check if item is present?(y/n)" << endl;
         cin >> isitem;
         if(tolower(isitem)=='y'){
             goods();
         }
         else{
             warehouse();
-        
+        }
         }
     }
-    }
+        else{
+            cout << "No order placed" << endl;
+        }    
+    
+
 }
