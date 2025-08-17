@@ -45,7 +45,7 @@ string askLine(const string& prompt) {
 }
 
 void Registration(Student& s) {
-    cout << "\n=== Registration Form ===\n";
+    cout << "\nRegistration Form\n";
     if (s.name.empty())     s.name    = askLine("Enter student name: ");
     if (s.program.empty())  s.program = askLine("Enter department: ");
 
@@ -55,13 +55,13 @@ void Registration(Student& s) {
 }
 
 void AdmissionOffice(Student& s) {
-    cout << "\n=== Admission Office Verification ===\n";
+    cout << "\nAdmission Office Verification\n";
     cout << "Received form for " << s.name << " (" << s.program << ")\n";
     do {
-        cout << "Checking details...\n";
+        cout << "Checking details\n";
         s.verified = askYesNo("Are the details verified?");
         if (!s.verified) {
-            cout << "Return form for correction. Please correct the details.\n";
+            cout << "Return form for correction. Please correct the details\n";
             if (askYesNo("Edit name?"))     s.name    = askLine("New name: ");
             if (askYesNo("Edit program?"))  s.program = askLine("New program: ");
         }
@@ -70,7 +70,7 @@ void AdmissionOffice(Student& s) {
 }
 
 void Visa(Student& s) {
-    cout << "\n=== Visa Section ===\n";
+    cout << "\nVisa Section\n";
     s.needsVisa = askYesNo("Does the student need a visa?");
     if (s.needsVisa) {
         cout << "Informing student to apply for visa" << endl;
@@ -85,7 +85,7 @@ void Visa(Student& s) {
 }
 
 void TuitionFee(Student& s) {
-    cout << "\n=== Tuition Fee Section ===\n";
+    cout << "\nTuition Fee Section\n";
     cout << "Student proceeds with fee payment" << endl;;
     do {
         s.feePaid = askYesNo("Has the fee been paid?");
@@ -95,7 +95,7 @@ void TuitionFee(Student& s) {
 }
 
 void Accommodation(Student& s) {
-    cout << "\n=== Accommodation Section ===\n";
+    cout << "\nAccommodation Section\n";
     s.wantsAccommodation = askYesNo("Does the student want accommodation?");
     if (s.wantsAccommodation) {
         s.accommodation = askLine("Assign accommodation (room/hostel): ");
@@ -106,14 +106,14 @@ void Accommodation(Student& s) {
 }
 
 void PersonalTutor(Student& s) {
-    cout << "\n=== Personal Tutor Assignment ===\n";
+    cout << "\nPersonal Tutor Assignment\n";
     if (s.tutor.empty())
         s.tutor = askLine("Assign tutor (enter tutor name): ");
     cout << "Student meets Personal Tutor: " << s.tutor << ".\n";
 }
 
 void ExtraCourse(Student& s) {
-    cout << "\n=== Extra Course Selection ===\n";
+    cout << "\nExtra Course Selection\n";
     s.hasExtraCredits = askYesNo("Does the student have extra credits?");
     if (s.hasExtraCredits) {
         s.extraCourse = askLine("Enter name of additional course: ");
@@ -124,7 +124,7 @@ void ExtraCourse(Student& s) {
 }
 
 void FullyRegistered(const Student& s) {
-    cout << "\n=== Fully Registered Summary ===\n";
+    cout << "\nFully Registered Summary\n";
     cout << "Completed Registration for " << s.name << " (" << s.program << ")\n";
     cout << "Summary:\n";
     cout << " Verified: " << (s.verified ? "Yes" : "No") << "\n";
