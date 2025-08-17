@@ -51,10 +51,10 @@ bool login(vector<User> &users, string uname, string pass) {
 }
 
 int main() {
-    string dbFile = "users.csv";
+    string dbFile = "userdataDB.csv";
     vector<User> users = loadUsers(dbFile);
 
-    cout << "===== Login System =====\n";
+    cout << "Login System\n";
     cout << "Are you Admin (A) or Registered User (R)? : ";
     char choice;
     cin >> choice;
@@ -103,6 +103,6 @@ int main() {
         cout << "Invalid choice!\n";
     }
 
-    cout << "===== End =====\n";
+    cout << "End";
     return 0;
 }
