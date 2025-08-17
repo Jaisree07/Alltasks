@@ -50,9 +50,10 @@ void smoke(){
     if(num == 1){
         cout << "Is the fire inside the building?(y/n):" << endl;;
         cin >> fire;
-        if(fire == 'n') 
+        if(fire == 'n') {
             cout << "Contact the fire department immediately" << endl;
-        break;
+          return;
+        }
         else 
             cout << "Push the nearest fire alarm trigger" << endl;
     }
