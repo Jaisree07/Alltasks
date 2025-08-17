@@ -1,0 +1,6 @@
+CustomerID,Name,AccountValid,CardValid,FundsAvailable
+01,Jai,1,1,1900
+02,Joshika,1,1,2678
+03,Suba,0,1,1000
+04,Vaishali,1,0,5432
+05,Abijith,2,8,5000
