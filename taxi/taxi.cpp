@@ -10,7 +10,7 @@ struct User {
     string password;
 };
 
-// Function to read users from CSV database
+
 vector<User> loadUsers(const string &filename) {
     vector<User> users;
     ifstream file(filename);
@@ -27,7 +27,7 @@ vector<User> loadUsers(const string &filename) {
     return users;
 }
 
-// Function to update password in CSV
+
 void updatePassword(const string &filename, const string &uname, const string &newpass) {
     vector<User> users = loadUsers(filename);
     ofstream file(filename, ios::trunc);
@@ -40,7 +40,7 @@ void updatePassword(const string &filename, const string &uname, const string &n
     file.close();
 }
 
-// Function to check login
+
 bool login(vector<User> &users, string uname, string pass) {
     for (auto &u : users) {
         if (u.username == uname && u.password == pass) {
@@ -93,9 +93,9 @@ int main() {
                 cout << "Enter new password: ";
                 cin >> newpass;
                 updatePassword(dbFile, uname, newpass);
-                cout << "Password updated successfully!\n";
+                cout << "Password updated successfully!";
             } else {
-                cout << "Returning to main menu...\n";
+                cout << "Returning to main menu\n";
             }
         }
     }

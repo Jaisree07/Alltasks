@@ -1,90 +1,61 @@
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <string>
-#include <algorithm>
 using namespace std;
 
-bool verifyPayment(bool cardValid, bool fundsAvailable) {
-    cout << "Payment verification initiated by card network" << endl;
+string username, cardNumber;
 
-    if (!cardValid) {
-        cout << "Card is not valid : Payment failed." << endl;
-        return false;
-    }
-    if (!fundsAvailable) {
-        cout << "Insufficient funds : Payment failed." << endl;
-        return false;
-    }
 
-    cout << "Payment successfully verified by bank" << endl;
-    return true;
+void creditCardValidation(){
+    cout << "Payment verification by creditcard" << endl;
+    cout << "Is this credit card valid? (y/n): " << endl;
+    char cardValid;
+    cin >> cardValid;
+    if (cardValid == 'y' || cardValid == 'Y') {
+        cout << "Card is valid : Transaction success" << endl;
+        char fundsAvailable;
+        cout << "Is any fund available? (y/n): " << endl;
+        cin >> fundsAvailable;
+        if (fundsAvailable == 'y' || fundsAvailable == 'Y') {
+            cout << "Payment verified by the bank" << endl;
+            char accountValid;
+            cout << "Is account available? (y/n): ";
+            cin >> accountValid;
+            if (accountValid == 'y' || accountValid == 'Y') {
+            cout << "Account is available" << endl; 
+            return;
+    }
+    }
+    }   
+    creditCardValidation();
+
 }
 
-void processTransaction(string id, string name, bool accountValid, bool cardValid, bool fundsAvailable) {
-    cout << endl << "Order placed by client: " << name << " (ID: " << id << ")" << endl;
+void getdetails(string& name, string& cardnum){
+    fstream customerfile("customer.csv", ios::in | ios::out  | ios::app);
+    customerfile << name << " , " << cardnum;
 
-    if (accountValid) {
-        cout << "Account status: Valid" << endl;
-
-        if (verifyPayment(cardValid, fundsAvailable)) {
-            cout << "Transaction completed successfully" << endl;
-            cout << "Cardholder will receive statement at the end of billing cycle" << endl;
-        }
-    } else {
-        cout << "Account status: Invalid : Transaction failed" << endl;
-    }
 }
 
-int main() {
-    ifstream file("datacustomerDB.csv");
-    if (!file.is_open()) {
-        cout << "Error: Unable to open 'datacustomerDB.csv'" << endl;
-        return 1;
+int main(){
+
+    cout << "Transaction Processing System" << endl;
+    cout << "Enter your username: " << endl;
+    cin >> username;
+    cout << "Enter your card number: " << endl;
+    cin >> cardNumber;
+
+    char orderPlaced;
+    cout << "Is order placed by client? (y/n):";
+    cin >> orderPlaced;
+
+    if (orderPlaced != 'y' && orderPlaced != 'Y') {
+        cout << "Order notplaced : Process terminated" << endl;
+        return 0;
     }
-
-    string line;
-    getline(file, line); 
-
-    string customerID;
-    cout << "Enter Customer ID to process transaction: ";
-    cin >> customerID;
-
-    bool found = false;
-    while (getline(file, line)) {
-        stringstream ss(line);
-        string id, name, acc, card, funds;
-
-        getline(ss, id, ',');
-        getline(ss, name, ',');
-        getline(ss, acc, ',');
-        getline(ss, card, ',');
-        getline(ss, funds, ',');
-
-        // Remove spaces and carriage returns inline
-        acc.erase(remove(acc.begin(), acc.end(), ' '), acc.end());
-        acc.erase(remove(acc.begin(), acc.end(), '\r'), acc.end());
-        card.erase(remove(card.begin(), card.end(), ' '), card.end());
-        card.erase(remove(card.begin(), card.end(), '\r'), card.end());
-        funds.erase(remove(funds.begin(), funds.end(), ' '), funds.end());
-        funds.erase(remove(funds.begin(), funds.end(), '\r'), funds.end());
-
-        if (id == customerID) {
-            found = true;
-            bool accountValid = (acc == "1");
-            bool cardValid = (card == "1");
-            bool fundsAvailable = (funds == "1");
-
-            processTransaction(id, name, accountValid, cardValid, fundsAvailable);
-            break;
-        }
+    else{
+        creditCardValidation();
+        cout << "Transction completed" << endl;
+        getdetails(username,cardNumber);
     }
-
-    if (!found) {
-        cout << "Customer ID not found in database" << endl;
-    }
-
-    file.close();
-    cout << endl << "End of transaction process" << endl;
-    return 0;
 }
