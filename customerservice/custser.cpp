@@ -6,23 +6,23 @@ using namespace std;
 
 
 void feedback(){
-     cout << "feedback(0/1)" <, endl;
+     cout << "feedback(0/1)" << endl;
      bool feedback;
      cin >> feedback;
      if(feedback){
-        cout << "Take survey" << endl;
+       cout << "Take survey" << endl;
+       exit(0);
      }
-
-    return;
+     else{
+        cout << "End" << endl;
+     }
+     
 }
 
 void errorReport(){
-    while(true){
    cout << "Error analysis" << endl;
-   char iserror;
-   cin >> iserror;
-   if(tolower(iserror)=='y'){
-    cout << "Solve the issue(y/n)" << endl;
+   cout << "Solve the issue?(y/n)" << endl;
+    cout << "Is the issue fixed(y/n)" << endl;
     char isfixed;
     cin >> isfixed;
     if(tolower(isfixed)=='y'){
@@ -32,21 +32,24 @@ void errorReport(){
         errorReport();
     }
    }
-}
-}
+
 
 
 
 void newissue(){
+    while(true){
             cout << "Is there is any new issue(y/n)" << endl;
             char isnew;
             cin >> isnew;
             if(tolower(isnew)=='y'){
                 cout << "Test the issue" << endl;
+                return;
             }
             else{
                 cout << "Resolve the issue" << endl;
+                return;
             }
+}
 }
 
 void issue(){
@@ -63,9 +66,13 @@ void issue(){
             if(tolower(istechissue)=='y'){
                cout << "Contact technical team" << endl;
             }
-            cout << "Fixed the issue" << endl;
+            else
             newissue();
+        }
+            cout << "Fixed the issue" << endl;
+          
 }
+
 
 void serviceissues(){
     cout << "Enquiry(y/n)" << endl;
@@ -77,22 +84,10 @@ void serviceissues(){
     }
     else{
         issue();
-       
-                char simulation;
-                cout << "Simulate the issue(y/n)" << endl;
-                cin >> simulation;
-                if(tolower(simulation)=='y'){
-                    errorReport();
-                }
-                else{
-                    cout << "Contact customer for information" << endl;
-                }
-            }
+    }
             
         }
 
-    }
-}
 
 int main(){
     cout << "Customer Service System" << endl;
@@ -100,6 +95,21 @@ int main(){
     cout << "Customer contacted customer service department" << endl;
     serviceissues();
     cout << "Confirm issue fixed with customer" << endl;
-    feedback();
+    //feedback();
+    while(true){
+    char simulation;
+                cout << "Simulate the issue(y/n)" << endl;
+                cin >> simulation;
+                if(tolower(simulation)=='y'){
+                    errorReport();
+                    break;
+                }
+                else{
+                    cout << "Contact customer for information" << endl;
+                }
+            }
+            cout << "Confirm issue fixed with customer" << endl;
+            feedback();
+
 
 }
