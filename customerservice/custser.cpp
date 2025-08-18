@@ -4,6 +4,20 @@
 #include <ctime>
 using namespace std;
 
+void logErrorToCSV(const string &description) {
+    ofstream file("error.csv", ios::app);
+    if (!file.is_open()) {
+        cerr << "Error opening error.csv" << endl;
+        return;
+    }
+
+    time_t now = time(0);
+    string dt = ctime(&now);
+    dt.pop_back(); 
+
+    file << "Technical Error," << description << "," << dt << "\n";
+    file.close();
+}
 
 void feedback(){
      cout << "feedback(0/1)" << endl;
@@ -29,6 +43,7 @@ void errorReport(){
         return;
     }
     else{
+         logErrorToCSV("Issue not resolved");
         errorReport();
     }
    }
