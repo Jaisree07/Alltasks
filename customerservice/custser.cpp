@@ -35,20 +35,26 @@ void errorReport(){
 }
 }
 
-void serviceissues(){
-    cout << "Enquiry(y/n)" << endl;
-    char enq;
-    cin >> enq;
-    if(tolower(enq)=='y'){
-        cout << "Answer the question" << endl;
-    }
-    else{
-        char issuesales;
+
+
+void newissue(){
+            cout << "Is there is any new issue(y/n)" << endl;
+            char isnew;
+            cin >> isnew;
+            if(tolower(isnew)=='y'){
+                cout << "Test the issue" << endl;
+            }
+            else{
+                cout << "Resolve the issue" << endl;
+            }
+}
+
+void issue(){
+     char issuesales;
         cout << "Is there is any issue in sales?(y/n)" << endl;
         cin >> issuesales;
         if(tolower(issuesales)=='y'){
             cout << "Redirect to sales support" << endl;
-            cout << "Fixed the issue" << endl;
         }
         else{
             cout << "Is there is any technical issue?(y/n)" << endl;
@@ -56,18 +62,22 @@ void serviceissues(){
             cin >> istechissue;
             if(tolower(istechissue)=='y'){
                cout << "Contact technical team" << endl;
-               cout << "Fixed the issue" << endl;
             }
-            else{
-                cout << "Is there is any new issue(y/n)" << endl;
-                char isnew;
-                cin >> isnew;
-                if(tolower(isnew)=='y'){
-                    cout << "Test the issue" << endl;
-                }
-                else{
-                    cout << "Resolve the issue" << endl;
-                }
+            cout << "Fixed the issue" << endl;
+            newissue();
+}
+
+void serviceissues(){
+    cout << "Enquiry(y/n)" << endl;
+    char enq;
+    cin >> enq;
+    if(tolower(enq)=='y'){
+        cout << "Answer the question" << endl;
+        feedback();
+    }
+    else{
+        issue();
+       
                 char simulation;
                 cout << "Simulate the issue(y/n)" << endl;
                 cin >> simulation;
