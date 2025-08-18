@@ -2,107 +2,78 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <vector>
 using namespace std;
-
-struct User {
-    string username;
-    string password;
-};
-
-
-vector<User> loadUsers(const string &filename) {
-    vector<User> users;
-    ifstream file(filename);
-    string line, uname, pass;
-
-    while (getline(file, line)) {
+ 
+string name, location;
+ 
+void incomingOrder() {
+    cout << "Customername: " << endl;
+    cin >> name;
+    cout << "Location: " << endl;
+    cin >> location;
+    string pick;
+    do {
+        cout << "Time to pickup would be 30 mins or less?(y/n): ";
+        cin >> pick;
+        if (pick == 'n') {
+            cout << "Wait for the next customer" << endl;
+        }
+    } while (pick != "yes");
+    fstream inc("userdata.csv", ios::out | ios::app);
+    inc << name << "," << location << endl;
+    inc.close();
+    cout << "Order accepted" << endl;
+}
+ 
+pair<string, string> orderPlaced() {
+    fstream taxi("taxiavail.csv", ios::in);
+    ofstream temp("taxi.csv");
+    string line, tname, ran;
+    int km;
+    bool taxiFound = false;
+    pair<string, string> getTaxi = {"", ""};
+    while (getline(taxi, line)) {
         stringstream ss(line);
-        getline(ss, uname, ',');
-        getline(ss, pass, ',');
-        if (!uname.empty() && !pass.empty())
-            users.push_back({uname, pass});
-    }
-    file.close();
-    return users;
-}
-
-
-void updatePassword(const string &filename, const string &uname, const string &newpass) {
-    vector<User> users = loadUsers(filename);
-    ofstream file(filename, ios::trunc);
-    for (auto &u : users) {
-        if (u.username == uname) {
-            u.password = newpass;
+        getline(ss, tname, ',');
+        getline(ss, ran);
+        km = stoi(ran);
+        if (!taxiFound && km <= 10) {
+            cout << "Taxi " << tname << " is within " << ran << " km range" << endl;
+            taxiFound = true;
+            getTaxi = {tname, ran};
+            continue;
         }
-        file << u.username << "," << u.password << "\n";
+        temp << tname << "," << ran << endl;
     }
-    file.close();
-}
-
-
-bool login(vector<User> &users, string uname, string pass) {
-    for (auto &u : users) {
-        if (u.username == uname && u.password == pass) {
-            return true;
-        }
+    taxi.close();
+    temp.close();
+    remove("taxiavail.csv");
+    rename("taxi.csv", "taxiavail.csv");
+    if (!taxiFound) {
+        cout << "No taxi found, kindly wait" << endl;
     }
-    return false;
+    return getTaxi;
 }
-
+ 
+void taxiRide(string taxiName, string range) {
+    if (taxiName == "") {
+        cout << "Ride cannot be assigned" << endl;
+        cout << "No taxi available" << endl;
+        return;
+    }
+    cout << "Passenger " << name << " is assigned to taxi: " << taxiName << endl;
+    fstream order("history.csv", ios::out | ios::app);
+    order << name << "," << taxiName << endl;
+    order.close();
+    cout << "Taxi ride completed" << endl;
+    cout << "History updated" << endl;
+}
+ 
 int main() {
-    string dbFile = "userdataDB.csv";
-    vector<User> users = loadUsers(dbFile);
-
-    cout << "Login System\n";
-    cout << "Are you Admin (A) or Registered User (R)? : ";
-    char choice;
-    cin >> choice;
-
-    if (choice == 'A' || choice == 'a') {
-        string uname, pass;
-        cout << "Enter Admin username: ";
-        cin >> uname;
-        cout << "Enter Admin password: ";
-        cin >> pass;
-
-        if (login(users, uname, pass) && uname == "admin") {
-            cout << "Admin login successful!\n";
-            cout << "Admin can update all data here...\n";
-        } else {
-            cout << "Admin login failed.\n";
-        }
-    }
-    else if (choice == 'R' || choice == 'r') {
-        string uname, pass;
-        cout << "Enter Username: ";
-        cin >> uname;
-        cout << "Enter Password: ";
-        cin >> pass;
-
-        if (login(users, uname, pass)) {
-            cout << "User login successful!\n";
-            cout << "Welcome, " << uname << "!\n";
-        } else {
-            cout << "Invalid credentials!\n";
-            cout << "Forgot Password? (Y/N): ";
-            char fp;
-            cin >> fp;
-            if (fp == 'Y' || fp == 'y') {
-                string newpass;
-                cout << "Enter new password: ";
-                cin >> newpass;
-                updatePassword(dbFile, uname, newpass);
-                cout << "Password updated successfully!";
-            } else {
-                cout << "Returning to main menu\n";
-            }
-        }
-    }
-    else {
-        cout << "Invalid choice!\n";
-    }
-
-    cout << "End";
+    incomingOrder();
+    pair<string, string> getTaxi = orderPlaced();
+    taxiRide(getTaxi.first, getTaxi.second);
     return 0;
 }
+ 
+ 

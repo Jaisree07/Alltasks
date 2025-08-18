@@ -1,9 +1,12 @@
+
 #include <iostream>
 #include <string>
 #include <limits>
 #include <fstream>
 using namespace std;
-
+ 
+void Accommodation(Student& s);
+ 
 struct Student {
     string name;
     string accommodation;
@@ -16,14 +19,14 @@ struct Student {
     bool visaApplied = false;
     bool feePaid = false;
     bool wantsAccommodation = false;
-    
+   
 };
-
+ 
 void clearLine() {
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
-
+ 
 bool choose(const string& prompt) {
     while (true) {
         cout << prompt << " (y/n): ";
@@ -35,7 +38,7 @@ bool choose(const string& prompt) {
         cout << "Please enter(y/n)" << endl;
     }
 }
-
+ 
 string askLine(const string& prompt) {
     cout << prompt;
     string s;
@@ -43,18 +46,18 @@ string askLine(const string& prompt) {
     getline(cin, s);
     return s;
 }
-
-void Registration(Student& s) {
+ 
+void RegisterStudent(Student& s) {
     cout << "\nRegistration Form\n";
     if (s.name.empty())     s.name    = askLine("Enter student name: ");
     if (s.program.empty())  s.program = askLine("Enter department: ");
-
+ 
     cout << "Registration process initiated" << endl;
     cout << "Form sent to corresponding departments" << endl;
     cout << "Saved to Student Information DB" << endl;
 }
-
-void AdmissionOffice(Student& s) {
+ 
+void AdmissionVerify(Student& s) {
     cout << "\nAdmission Office Verification\n";
     cout << "Received form for " << s.name << " (" << s.program << ")\n";
     do {
@@ -68,8 +71,8 @@ void AdmissionOffice(Student& s) {
     } while (!s.verified);
     cout << "Verified successfully" << endl;;
 }
-
-void Visa(Student& s) {
+ 
+void VisaApplication(Student& s) {
     cout << "\nVisa Section\n";
     s.needsVisa = choose("Does the student need a visa?");
     if (s.needsVisa) {
@@ -83,8 +86,8 @@ void Visa(Student& s) {
         cout << "No visa required" << endl;
     }
 }
-
-void TuitionFee(Student& s) {
+ 
+void Tution(Student& s) {
     cout << "\nTuition Fee Section\n";
     cout << "Student proceeds with fee payment" << endl;;
     do {
@@ -93,7 +96,7 @@ void TuitionFee(Student& s) {
     } while (!s.feePaid);
     cout << "Payment confirmed" << endl;;
 }
-
+ 
 void Accommodation(Student& s) {
     cout << "\nAccommodation Section\n";
     s.wantsAccommodation = choose("Does the student want accommodation?");
@@ -104,14 +107,14 @@ void Accommodation(Student& s) {
         cout << "No accommodation requested" << endl;
     }
 }
-
-void PersonalTutor(Student& s) {
+ 
+void Tutor(Student& s) {
     cout << "\nPersonal Tutor Assignment\n";
     if (s.tutor.empty())
         s.tutor = askLine("Assign tutor (enter tutor name): ");
     cout << "Student meets Personal Tutor: " << s.tutor << "\n";
 }
-
+ 
 void ExtraCourse(Student& s) {
     cout << "\nExtra Course Selection\n";
     s.hasExtraCredits = choose("Does the student have extra credits?");
@@ -122,39 +125,33 @@ void ExtraCourse(Student& s) {
         cout << "No extra course selected" << endl;
     }
 }
-
+ 
 void FullyRegistered(const Student& s) {
     cout << "\nFully Registered Summary\n";
     cout << "Completed Registration for " << s.name << " (" << s.program << ")\n";
     cout << "Summary:\n";
-    cout << " Verified: " << (s.verified ? "y" : "No") << "\n";
-    cout << " Visa: " << (s.needsVisa ? (s.visaApplied ? "Applied" : "Required (not applied)") : "Not required") << "\n";
-    cout << " Fee Paid: " << (s.feePaid ? "y" : "No") << "\n";
-    cout << " Accommodation: " << (s.wantsAccommodation ? s.accommodation : "Not requested") << "\n";
-    cout << " Tutor: " << (!s.tutor.empty() ? s.tutor : "Not assigned") << "\n";
-    cout << " Extra Course: " << (s.hasExtraCredits ? s.extraCourse : "None") << "\n";
     cout << "Registration process completed.\n";
 }
-
-void DB(const Student& s) {
+ 
+void DBFile(const Student& s) {
     bool writeHeader = false;
     ifstream check("students.csv");
     if (!check.good() || check.peek() == ifstream::traits_type::eof()) {
         writeHeader = true;
     }
     check.close();
-
-    ofstream db("students.csv", ios::app);
-    if (!db) {
+ 
+    ofstream file("students.csv", ios::app);
+    if (!file) {
         cerr << "Error opening database file!" << endl;
         return;
     }
-
+ 
     if (writeHeader) {
-        db << "Name,Department,Verified,Visa,FeePaid,Accommodation,Tutor,ExtraCourse" << endl;
+        file << "Name,Department,Verified,Visa,FeePaid,Accommodation,Tutor,ExtraCourse" << endl;
     }
-
-    db << s.name << ","
+ 
+    file << s.name << ","
        << s.program << ","
        << (s.verified ? "y" : "No") << ","
        << (s.needsVisa ? (s.visaApplied ? "Applied" : "Required") : "Not required") << ","
@@ -162,23 +159,23 @@ void DB(const Student& s) {
        << (s.wantsAccommodation ? s.accommodation : "Not requested") << ","
        << (!s.tutor.empty() ? s.tutor : "Not assigned") << ","
        << (s.hasExtraCredits ? s.extraCourse : "None") << "\n";
-
-    db.close();
-    cout << "Student data saved to DB (students.csv)" << endl;
+ 
+    file.close();
+    cout << "Student data saved to students.csv " << endl;
 }
-
+ 
 int main() {
     Student s;
-
-    Registration(s);
-    AdmissionOffice(s);
-    Visa(s);
-    TuitionFee(s);
+ 
+    RegisterStudent(s);
+    AdmissionVerify(s);
+    VisaApplication(s);
+    Tution(s);
     Accommodation(s);
-    PersonalTutor(s);
+    Tutor(s);
     ExtraCourse(s);
     FullyRegistered(s);
-    DB(s);
-
+    DBFile(s);
+ 
     return 0;
 }
