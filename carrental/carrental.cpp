@@ -1,173 +1,181 @@
 #include <iostream>
-#include <string>
-#include <limits>
 #include <fstream>
+#include <string>
 using namespace std;
- 
- 
-string getInput(const string& message) {
-    cout << message;
-   
-    string input;
-    getline(cin, input);
-    return input;
-}
- 
-bool choice(const string& message) {
-    while (true) {
-        cout << message << " (y/n): ";
-        char response;
-        if (!(cin >> response)) {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            continue;
-        }
-        response = tolower(response);
-        if (response == 'y'){
-            return true;
-        }
-        if (response == 'n'){
-              return false;
-        }
-           
-    }
- 
-}
-void login(string &password) {
-    string entered;
-    bool success = false;
- 
-    do {
-        cout << "Enter password: ";
-        cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
-        getline(cin, entered);
-        string enter = entered;
-       
-        if (enter == password) {
-            cout << "Login successful\n";
-            success = true;
+
+void forgotPassword();
+void registeredUserlogin();
+void adminlogin();
+
+string database = "carrental.csv";
+void forgotPassword() {
+    cout << "Enter username: " << endl;
+    string username;
+    cin >> username;
+
+    ifstream fin(database);
+    ofstream temp("temp.csv");
+    string line;
+    bool found = false;
+
+    while (getline(fin, line)) {
+        size_t pos = line.find(",");
+        string dbUser = line.substr(0, pos);
+        string dbPass = line.substr(pos + 1);
+
+        if (dbUser == username) {
+            found = true;
+            string newPass;
+            cout << "User found" << endl;
+            do {
+                cout << "Enter new password (6 characters only):" << endl;
+                cin >> newPass;
+                if (newPass.length() != 6) {
+                    cout << "Password must be exactly 6 characters" << endl;
+                }
+            } while (newPass.length() != 6);
+            temp << dbUser << "," << newPass << endl;
         } else {
-            cout << "Incorrect password\n";
-            if (choice("Forgot password?")) {
-                password = getInput("Set new password: ");
-                cout << "Password reset successful" << endl;
+            temp << line << endl;
+        }
+    }
+
+    fin.close();
+    temp.close();
+    remove(database.c_str());
+    rename("new.csv", database.c_str());
+
+    if (found)
+        cout << "Password reset successful" << endl;
+    else
+        cout << "Username not found" << endl;
+}
+
+
+void registeredUserlogin() {
+    cout << "Are you a registered user? (y/n): " << endl;
+    char choice;
+    cin >> choice;
+
+    if (choice == 'y') {
+        string username, password;
+        int attempts = 3;
+        bool success = false;
+
+        while (attempts--) {
+            cout << "Username: " << endl;
+            cin >> username;
+            cout << "Password: " << endl;
+            cin >> password;
+
+            ifstream fin(database);
+            string line;
+            bool found = false;
+
+            while (getline(fin, line)) {
+                size_t pos = line.find(",");
+                string dbUser = line.substr(0, pos);
+                string dbPass = line.substr(pos + 1);
+                if (dbUser == username && dbPass == password) {
+                    found = true;
+                    break;
+                }
+            }
+
+            fin.close();
+
+            if (found) {
+                cout << "Login successful" << endl;
+                cout << "Look for desired vehicle" << endl;
+                cout << "Make payment" << endl;
+                success = true;
+                break;
+            } else {
+                cout << "Invalid credentials: " << attempts << endl;
             }
         }
-    } while (!success);
- 
-    cout << "Looking for desired vehicle\n";
-    cout << "Making payment" << endl;
-    cout << "Logout complete" << endl;
-}
- 
- 
-void saveUserToCSV(const string& name, const string& email, const string& password) {
-    ofstream file("users.csv", ios::app);
-    if (!file) {
-        cerr << "Error" << endl;
-        return;
-    }
-    file << name << "," << email << "," << password << "\n";
-    file.close();
-    cout << "User details saved in DB (users.csv)" << endl;
-}
- 
- 
- 
-void newuser() {
-    cout << "New User Registration" << endl;
-    string name = getInput("Enter name: ");
-    cin.ignore();
-    string email = getInput("Enter email: ");
-    cin.ignore();
-    string pass  = getInput("Set password: ");
-    cin.ignore();
 
-    saveUserToCSV(name, email, pass);
- 
-    cout << "Registration Completed ";
- 
-    cout << "Proceed to login\n";
-    login(pass);
-}
- 
-void registeredusers() {
-    if(choice("RegisteredUser")){
-         string pass = getInput("password");
-        login(pass);
-    }
-    else{
-       newuser();
-    }
-}
- 
- 
-void Chooseapplication() {
-    bool loop = true;
- 
-    while (loop) {
-        cout << "1. Update car library" << endl;
-        cout << "2. Answer customer enquiries" << endl;
-        cout << "3. Logout" << endl;
-        cout << "Choose action: ";
-        int ch;
-        cin >> ch;
- 
-        switch (ch) {
-            case 1:
-                cout << "Car library updated successfully" << endl;
-                break;
-            case 2:
-                cout << "Customer enquiries answered" << endl;
-                break;
-            case 3:
-                cout << "Logging out" << endl;
-                loop = false;
-                break;
-            default:
-                cout << "Invalid choice" << endl;
+        if (!success) {
+            cout << "Too many failed attempts." << endl;
+            cout << "Forgot password? (y/n): " << endl;
+            char fp;
+            cin >> fp;
+            if (fp == 'y') {
+                forgotPassword();
+            }
         }
-    
+
+    } else {
+        string username, password;
+        cout << "Enter new username: " << endl;
+        cin >> username;
+
+        do {
+            cout << "Enter new password (6 characters only): " << endl;
+            cin >> password;
+            if (password.length() != 6) {
+                cout << "Password must be exactly 6 characters" << endl;
+            }
+        } while (password.length() != 6);
+
+        ofstream fout(database, ios::app);
+        fout << username << "," << password << "\n";
+        fout.close();
+        cout << "Registration successful!" << endl;
     }
 }
- 
- 
-void admin() {
-    cout << " Admin Login" << endl;
-    string password; 
-    string correct = "908";
- 
-    bool loggedIn = false;
-    do {
-        cout << "Enter admin password" << endl;
-        cin >> password;
-        if (password == correct) {
-            cout << "Login successful" << endl;
-            loggedIn = true;
-        } else {
-            cout << "Login failed" << endl;
+
+
+void adminlogin() {
+    cout << "Admin Login" << endl;
+    cout << "Are you admin? (y/n): " << endl;
+    char choice;
+    cin >> choice;
+    int ch;
+
+    if (choice == 'y') {
+        int attempts = 3;
+        while (attempts--) {
+            string user, pass;
+            cout << "Username: ";
+            cin >> user;
+            cout << "Password: ";
+            cin >> pass;
+
+            if (user == "xyz" && pass == "789") {
+                cout << "Admin login successful" << endl;
+
+                while (true) {
+                    cout << "1. Update car library" << endl;
+                    cout << "2. Answer customer queries" << endl;
+                    cout << "3. Logout" << endl;
+                    cout << "Enter your choice: ";
+                    cin >> ch;
+
+                    if (ch == 1) {
+                        cout << "Car library has been updated" << endl;
+                    } else if (ch == 2) {
+                        cout << "Customer queries have been answered" << endl;
+                    } else if (ch == 3) {
+                        cout << "Logged out from admin panel" << endl;
+                        break;
+                    } else {
+                        cout << "Invalid choice so try again" << endl;
+                    }
+                }
+                return;
+            } else {
+                cout << "Invalid admin credentials : " << attempts << endl;
+            }
         }
-    } while (!loggedIn);
- 
-    Chooseapplication();
+        cout << "Too many failed login attempts" << endl;
+    } else {
+        registeredUserlogin();
+    }
 }
- 
- 
- 
+
 int main() {
     cout << "Car Rental System" << endl;
-    cout << "User(1=Admin, 2=Registered User): ";
-    int choice;
-    cin >> choice;
- 
-    switch (choice) {
-        case 1:
-         admin(); 
-         break;          
-        case 2: 
-        registeredusers();
-         break;
-       default: cout << "Invalid choice" << endl;
-    }
+    adminlogin();
     return 0;
 }
