@@ -38,11 +38,7 @@ pair<string, string> orderPlaced() {
         getline(ss, tname, ',');
         getline(ss, ran);
         distance = stoi(ran);
-        if (!istaxifound && distance <= 20) {
-            cout << "Taxi " << tname << " is within " << ran << " km range" << endl;
-            istaxifound = true;
-            ride = {tname, ran};
-            continue;
+        
         }
         temp << tname << "," << ran << endl;
     }
