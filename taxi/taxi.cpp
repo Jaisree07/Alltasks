@@ -23,14 +23,7 @@ void incomingOrder() {
     inc << name << "," << location << endl;
     inc.close();
     cout << "Order accepted" << endl;
-    //  ofstream inc("userdata.csv", ios::app);
-    // if (!inc) {
-    //     cerr << "Error opening userdata.csv for writing." << endl;
-    //     return;
-    // }
-    // inc << name << "," << location << endl;
-    // inc.close();
-    // cout << "Order accepted" << endl;
+    
 }
  
 pair<string, string> orderPlaced() {
